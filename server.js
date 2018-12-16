@@ -250,9 +250,13 @@ app.get('/search/:search/page/:page', cache, (req, res) => {
                 var newRes = JSON.parse(JSON.stringify(results))
                 var all = JSON.parse(JSON.stringify(count))[0]['COUNT(*)']
                 var paginate = pagination(all, page)
-                cluster.setex(search, 3600, JSON.stringify({ results: newRes, page, ...paginate, fields, search: true, query: search }))
+                var data = { results: newRes, page, ...paginate, fields, search: true, query: search }
+
+                // Redis cache
+                cluster.setex(search, 3600, JSON.stringify(data))
+                
                 console.log('from database')
-                res.render('index.ejs', { results: newRes, page, ...paginate, fields, search: true, query: search })
+                res.render('index.ejs', data)
             })
         })
     }
