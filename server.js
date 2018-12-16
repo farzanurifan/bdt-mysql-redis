@@ -30,6 +30,11 @@ var connection = mysql.createConnection({
     port: '6033'
 })
 
+// Connect MySql
+connection.connect(err => {
+    if (err) throw err
+})
+
 // Redis config
 var cluster = new Redis.Cluster([{
     port: 7001,
@@ -51,18 +56,9 @@ var cluster = new Redis.Cluster([{
     host: '192.168.34.13'
 }])
 
-// Connect MySql
-connection.connect(err => {
-    if (err) throw err
-})
-
 // EJS view variables
 const pageItem = 20 // Items per page on table
-const fields = [
-    'Id',
-    'Review',
-    'Label'
-]
+const fields = ['Id', 'Review', 'Label']
 
 // Table pagination settings
 const pagination = (results, page) => {
@@ -247,15 +243,17 @@ app.get('/search/:search/page/:page', cache, (req, res) => {
     if (sess.email) {
         var page = Number(req.params.page)
         var search = req.params.search
-        var query = `SELECT * FROM reviews WHERE Review LIKE '%${search}%'`
+        var query = `SELECT * FROM reviews WHERE Review LIKE '%${search}%' LIMIT ${1000 * (page - 1)}, 1000`
         connection.query(query, (err, results) => {
             if (err) throw err
-            var newRes = JSON.parse(JSON.stringify(results))
-            var paginate = pagination(1, page)
-
-            cluster.setex(search, 3600, JSON.stringify({ results: newRes, page, ...paginate, fields, search: true, query: search }))
-            console.log('from database')
-            res.render('index.ejs', { results: newRes, page, ...paginate, fields, search: true, query: search })
+            connection.query('SELECT COUNT(*) FROM reviews', (err, count) => {
+                var newRes = JSON.parse(JSON.stringify(results))
+                var all = JSON.parse(JSON.stringify(count))[0]['COUNT(*)']
+                var paginate = pagination(all, page)
+                cluster.setex(search, 3600, JSON.stringify({ results: newRes, page, ...paginate, fields, search: true, query: search }))
+                console.log('from database')
+                res.render('index.ejs', { results: newRes, page, ...paginate, fields, search: true, query: search })
+            })
         })
     }
     else res.redirect('/login')
