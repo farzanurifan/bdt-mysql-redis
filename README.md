@@ -1,3 +1,1 @@
-bdt-mysql-redis
-#npm install
-#npm start
+bdt-mysql-redis, npm install -> npm start
