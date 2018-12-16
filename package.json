@@ -1,0 +1,35 @@
+{
+  "name": "bdt-mysql-redis",
+  "version": "1.0.0",
+  "description": "bdt-mysql-redis",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farzanurifan/bdt-mysql-redis.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/farzanurifan/bdt-mysql-redis/issues"
+  },
+  "homepage": "https://github.com/farzanurifan/bdt-mysql-redis#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "express-partials": "^0.3.0",
+    "express-session": "^1.15.6",
+    "ioredis": "^4.3.0",
+    "method-override": "^3.0.0",
+    "mysql": "^2.16.0",
+    "node-gyp": "^3.8.0",
+    "nodemon": "^1.18.9",
+    "password-hash": "^1.2.2",
+    "redis": "^2.8.0",
+    "redis-cluster": "0.0.8"
+  }
+}

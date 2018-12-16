@@ -1,0 +1,14 @@
+<a href='/' class='button is-danger is-small' style='margin-bottom: 2em'>
+    Back
+</a>
+<form action='/create' method='POST' style="max-width: 500px">
+    <% for(var j=0; j<fields.length; j++) {%>
+        <div class='field'>
+            <label class="label"><%= fields[j] %></label>
+            <div class='control'>
+                <input class='input' type='text' placeholder='<%= fields[j] %>' name='<%= fields[j] %>'>
+            </div>
+        </div>
+    <% } %>
+    <button type='submit' class='button is-success is-small'>Submit</button>
+</form>

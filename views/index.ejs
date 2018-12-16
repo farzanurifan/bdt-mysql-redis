@@ -1,0 +1,78 @@
+<a href='/logout' class='button is-danger is-small' style='margin-bottom: 2em'>
+    Logout
+</a>
+<form action='/search' method='POST' style="max-width: 500px">
+    <div class='field'>
+        <div class='control'>
+            <input class='input' type='text' placeholder='Search in review' name='search' value='<%= query %>'>
+        </div>
+    </div>
+    <button type='submit' class='button is-success is-small'>Search</button>
+</form>
+<br />
+<% if(!search) { %>
+<a href='/add' class='button is-success is-small' style='margin-bottom: 2em'>
+    Add
+</a>
+<% } else { %>
+<a href='/' class='button is-success is-small' style='margin-bottom: 2em'>
+    Home
+</a>
+<% } %>
+<div style='overflow-x: auto; font-size: 0.8em'>
+    <table class='table is-bordered is-striped is-narrow is-hoverable is-fullwidth'>
+        <thead>
+            <tr>
+                <% for(var i=0; i<fields.length; i++) {%>
+                    <th><%= fields[i] %></th>
+                <% } %>
+                <th>Action</th>
+                <th style='position: absolute; right: 1.5rem; width: 9em; background-color: white'>Action</th>
+            <tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<results.length; i++) {%>
+                <tr>
+                    <% for(var j=0; j<fields.length; j++) {%>
+                        <td><%= results[i][fields[j]] %></td>
+                    <% } %>
+                    <% for(var j=1; j<=2; j++) {%>
+                        <td nowrap style='<% if(j==2) { %> <%= 'position: absolute; right: 1.5rem;' %> <% } %> width: 9em; background-color: white'>
+                            <div class='columns is-gapless'>
+                                <div class='column'>
+                                    <a href=<%= '/edit/' + results[i].Id %>  class='button is-info is-small'>
+                                        Edit
+                                    </a>
+                                </div>
+                                <div class='column'>
+                                    <form action=<%= '/delete/' + results[i].Id  + '?_method=DELETE' %> method='POST'>
+                                        <button type='submit' class='button is-danger is-small'>Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    <% } %>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
+<nav class='pagination is-small' role='navigation' aria-label='pagination' style='margin-top: 2em'>
+    <a <% if(page - 1 == 0) {%><%= 'disabled' %> <% } else { %> <%= 'href=/page/' %><%= page - 1 %> %> <% } %> class='pagination-previous'>Previous</a>
+    <a <% if(page == pages) {%><%= 'disabled' %> <% } else { %> <%= 'href=/page/' %><%= page + 1 %> %> <% } %> class='pagination-next'>Next page</a>
+    <ul class='pagination-list'>
+        <li><a class='pagination-link <% if(page == 1) {%> <%= 'is-current' %> <% } %>' aria-label='Goto page 1' href='/page/1'>1</a></li>
+        <% if(pages > 1) { %>
+            <% if(page > 6 && pages > 11) { %>
+                <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <% } %>
+            <% for(var i=first; i<=last; i++) {%>
+                <li><a class='pagination-link <% if(page == i) {%> <%= 'is-current' %> <% } %>' aria-label='Goto page <%= i%>' href='/page/<%= i%>'><%= i%></a></li>
+            <% } %>
+            <% if(page < pages - 5 && pages > 11) { %>
+                <li><span class="pagination-ellipsis">&hellip;</span></li>
+            <% } %>
+            <li><a class='pagination-link <% if(page == pages) {%> <%= 'is-current' %> <% } %>' aria-label='Goto page <%= pages%>' href='/page/<%= pages%>'><%= pages%></a></li>
+        <% } %>
+    </ul>
+</nav>
